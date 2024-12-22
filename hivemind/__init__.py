@@ -7,6 +7,8 @@ from hivemind.config import DevelopmentConfig, ProductionConfig, TestingConfig
 from hivemind.core.commands import register_commands
 from hivemind.core.extensions import db
 from hivemind.models import *
+from hivemind.blueprints.main import main_bp
+from hivemind.blueprints.hive import hive_bp
 
 # Load environment variables
 load_dotenv()
@@ -38,12 +40,13 @@ def create_app(config=None):
             db.create_all()
 
     # Import and register blueprints
-    # app.register_blueprint(main_bp)
+    app.register_blueprint(main_bp)
+    app.register_blueprint(hive_bp)
 
     register_commands(app)
 
-    @app.context_processor
-    def utility_processor():
-        return
+    # @app.context_processor
+    # def utility_processor():
+    #     pass
     
     return app
