@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="drawer lg:drawer-open">
+  <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <div class="navbar bg-base-300 w-full">
+      <div class="flex-none lg:hidden">
+        <label for="my-drawer-3" aria-label="open sidebar" class="btn btn-square btn-ghost">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            class="inline-block h-6 w-6 stroke-current">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </label>
+      </div>
+      <div class="mx-2 flex-1 px-2">Chatroom {{ chatroom_id }}</div>
+      <div class="hidden flex-none lg:block">
+        <ul class="menu menu-horizontal">
+          <!-- Navbar menu content here -->
+          <li><a>Navbar Item 1</a></li>
+          <li><a>Navbar Item 2</a></li>
+        </ul>
+      </div>
+    </div>
+      <!-- Page content here -->
+      <div class=" flex flex-col space-y-4 overflow-auto pl-2" style="height: calc(100vh - 9rem);">
+        {% for message in chat_messages %}
+          <div class="chat chat-start">
+            <div class="chat-image avatar">
+              <div class="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS chat bubble component"
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+              </div>
+            </div>
+            <div class="chat-header">
+              User {{ message.user_id }}
+              <time class="text-xs opacity-50">12:45</time>
+            </div>
+            <div class="chat-bubble">{{ message.content }}</div>
+          </div>
+        {% endfor %}
+    </div>
+    <!-- Sticky Form -->
+    <form class="sticky bottom-0 bg-gray-50 p-4 shadow flex items-center">
+      <input
+        type="text"
+        placeholder="Enter a message..."
+        class="flex-1 p-2 border rounded"
+      />
+      <button type="submit" class="p-2 bg-blue-500 text-white rounded">
+        Send
+      </button>
+    </form>
+  </div>
+  <div class="drawer-side">
+    <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay"></label>
+    <ul class="menu bg-base-200 min-h-full w-60 p-4">
+      <!-- Sidebar content here -->
+      <li><a>Sidebar Item 1</a></li>
+      <li><a>Total Messages: {{ chat_messages | length }}</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{url_for('static', filename='js/index.js')}}"></script>
+{% endblock %}

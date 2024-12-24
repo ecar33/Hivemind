@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html 
+<html
 {% block html_attribs %}
+data-theme="wireframe"
 {% endblock html_attribs %}>
   <head>
     {%- block head %}
@@ -10,19 +11,18 @@
     <meta charset="utf-8">
     {%- endblock metas %}
     {%- block styles %}
-    <!-- Tailwind CS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" type="text/css">
     {%- endblock styles %}
     {%- endblock head %}
-
   </head>
-  <body {% block body_attribs %}{% endblock body_attribs %}>
+  <body {% block body_attribs %}{% endblock body_attribs %}>  
   
-  {% block navbar %}{%- endblock navbar %}
+  {% block content %}
+  {% endblock content%}
 
-  {% block content -%}{%- endblock content %}
-
-  {% block footer -%}{% endblock footer %}
+  {% block footer -%}
+  {% endblock footer %}
 
   {% block scripts %}{%- endblock scripts %}
   </body>

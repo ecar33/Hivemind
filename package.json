@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
+    "daisyui": "^4.12.22",
+    "tailwindcss": "^3.4.17"
+  },
+  "scripts": {
+    "dev": "concurrently \"npx tailwindcss -i ./hivemind/static/css/input.css -o ./hivemind/static/css/output.css --watch\" \"flask run\""
+  }
+}
