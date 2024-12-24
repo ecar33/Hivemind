@@ -77,3 +77,5 @@ def register_commands(app):
             ChatMessage.__table__.drop(db.engine)
             ChatMessage.__table__.create(db.engine)
             click.echo('ChatMessage table reset.')
+        else:
+            click.echo('Please specify a table and try again.')

@@ -11,19 +11,30 @@ data-theme="wireframe"
     <meta charset="utf-8">
     {%- endblock metas %}
     {%- block styles %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" type="text/css">
+    <link rel="preload" href="{{ url_for('static', filename='css/output.css') }}" as="style">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" type="text/css">
     {%- endblock styles %}
     {%- endblock head %}
   </head>
   <body {% block body_attribs %}{% endblock body_attribs %}>  
-  
+    
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+      <div role="alert" id="alert" class="{{ 'alert alert-error' if category=='error' else 'alert alert-success' }}">
+        <span>{{ message }}</span>
+      </div>
+    {% endfor %}
+
   {% block content %}
   {% endblock content%}
 
   {% block footer -%}
   {% endblock footer %}
 
-  {% block scripts %}{%- endblock scripts %}
+  {% block scripts %}
+  <script src="{{ url_for('static', filename='/js/base.js') }}" type="application/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
+  {%- endblock scripts %}
   </body>
 </html>

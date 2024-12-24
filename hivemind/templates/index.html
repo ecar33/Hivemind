@@ -1,0 +1,21 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+<div class="min-h-dvh flex flex-col justify-center items-center">
+    <h1 class="mb-2">Hivemind</h1>
+    <form method="POST" class="flex flex-col justify-center">
+        {{ form.hidden_tag() }}
+        <label class="input input-bordered flex items-center gap-2 mb-2">
+            Name
+            {{ form.name(class_="grow") }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
+        </label>
+        <label class="input input-bordered flex items-center gap-2 mb-2">
+            Room
+            {{ form.room(class_="grow") }} {% for error in form.room.errors %}{{ error }}{% endfor %}<br>
+        </label>
+        {{ form.submit(class_="align-center btn w-44 self-center mt-2") }}
+    </form>
+</div>
+
+{% endblock content %}

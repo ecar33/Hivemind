@@ -5,7 +5,7 @@ from flask import Flask
 
 from hivemind.config import DevelopmentConfig, ProductionConfig, TestingConfig
 from hivemind.core.commands import register_commands
-from hivemind.core.extensions import db
+from hivemind.core.extensions import db, socketio
 from hivemind.models import *
 from hivemind.blueprints.main import main_bp
 from hivemind.blueprints.hive import hive_bp
@@ -31,6 +31,10 @@ def create_app(config=None):
 
     # Bind extensions to app
     db.init_app(app)
+    socketio.init_app(app)
+
+    assert socketio.server is not None, "SocketIO has not been properly initialized!"
+    print("SocketIO successfully bound to app.")
 
     print(f'DB is: {app.config["SQLALCHEMY_DATABASE_URI"]}')
 
