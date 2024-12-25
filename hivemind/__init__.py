@@ -47,6 +47,9 @@ def create_app(config=None):
     app.register_blueprint(main_bp)
     app.register_blueprint(hive_bp)
 
+    # Import events for socketio
+    import hivemind.events
+    
     register_commands(app)
 
     # @app.context_processor

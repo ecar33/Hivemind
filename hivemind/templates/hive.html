@@ -7,6 +7,8 @@
 {% endblock styles %}
 
 {% block content %}
+<meta id="my-data" data-chatroom_id="{{ chatroom_id }}">
+
 <div class="drawer lg:drawer-open">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
@@ -36,8 +38,23 @@
               </div>
         </div>
     <!-- Page content here -->
-    <div class=" flex flex-col space-y-4 overflow-auto pl-2" style="height: calc(100vh - 9rem);">
-        {% for message in chat_messages %}
+    <div id="chat-message-container" class="flex flex-col space-y-4 overflow-auto pl-2" style="height: calc(100vh - 9rem);">
+      <template id="chat-message-template">
+        <div class="chat chat-start">
+          <div class="chat-image avatar">
+            <div class="w-10 rounded-full">
+              <img
+                alt="Tailwind CSS chat bubble component"
+                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+            </div>
+          </div>
+          <div class="chat-header">
+            <time class="text-xs opacity-50">12:45</time>
+          </div>
+          <div class="chat-bubble"></div>
+        </div>
+      </template>
+      <!-- {% for message in chat_messages %}
           <div class="chat chat-start">
             <div class="chat-image avatar">
               <div class="w-10 rounded-full">
@@ -52,19 +69,20 @@
             </div>
             <div class="chat-bubble">{{ message.content }}</div>
           </div>
-        {% endfor %}
+        {% endfor %} -->
     </div>
-    <!-- Sticky Form -->
-    <form class="sticky bottom-0 bg-gray-50 p-4 shadow flex items-center">
-      <input
-        type="text"
-        placeholder="Enter a message..."
-        class="flex-1 p-2 border rounded"
-      />
-      <button type="submit" class="p-2 bg-blue-500 text-white rounded">
-        Send
-      </button>
-    </form>
+      <!-- Sticky Message Send Bar -->
+      <div class="sticky bottom-0 bg-gray-50 p-4 shadow flex items-center">
+        <input
+          id="text"
+          type="text"
+          placeholder="Enter a message..."
+          class="flex-1 p-2 border rounded"
+        />
+        <button id='send' class="p-2 bg-blue-500 text-white rounded pl-2">
+          Send
+        </button>
+      </div>
     </div>
     <div class="drawer-side">
       <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
@@ -76,3 +94,41 @@
     </div>
   </div>
 {% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io('/hive');
+    socket.on('connect', function() {
+        console.log("Connected")
+        socket.emit('join', {data: 'I\'m connected!'});
+    });
+    socket.on('ping', function(data) {
+      console.log("Received from server: " + data.msg)
+    });
+    socket.on('message', function(data) {
+      console.log(data.msg)
+      $('#chat-message-container').append(data.msg)
+      $('#chat-message-container').scrollTop($('#chat-message-container')[0].scrollHeight);
+    });
+    $('#text').keypress(function(e) {
+      const code = e.keyCode || e.which;
+      if (code == 13) {
+        text = $('#text').val();
+        $('#text').val('');
+        if (!(typeof text === "string" && text.length === 0)) {
+          socket.emit('text', {msg: text});
+        }
+    }
+  });
+    $('#send').click(function(){
+      text = $('#text').val();
+        $('#text').val('');
+        if (!(typeof text === "string" && text.length === 0)) {
+          socket.emit('text', {msg: text});
+      }
+  });
+</script>
+
+{% endblock scripts %}

@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 
 from hivemind.forms import LoginForm
 
@@ -9,6 +9,8 @@ def index():
     form = LoginForm()
     if form.validate_on_submit():
         chatroom_id = request.form.get('room').strip()
+        session['room'] = chatroom_id
+        session['name'] = request.form.get('name').strip()
         return redirect(url_for('hive.hive', chatroom_id=chatroom_id))
     return render_template('index.html', form=form)
 
