@@ -2272,6 +2272,11 @@ html:has(.drawer-toggle:checked) {
   background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
 }
 
+.bg-primary {
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity, 1)));
+}
+
 .stroke-current {
   stroke: currentColor;
 }

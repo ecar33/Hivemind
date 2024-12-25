@@ -13,8 +13,8 @@ def on_join(data):
         'msg': 'You successfully connected!'
         }, to=room)
 
-@socketio.on('text', namespace='/hive')
-def text(message):
+@socketio.on('send_message', namespace='/hive')
+def on_send_message(message):
     room = session.get('room')
     emit('message', {
         'msg': f"<div> {session.get('name')}: {message['msg']} </div>",
