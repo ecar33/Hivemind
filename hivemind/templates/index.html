@@ -7,8 +7,12 @@
     <form method="POST" class="flex flex-col justify-center">
         {{ form.hidden_tag() }}
         <label class="input input-bordered flex items-center gap-2 mb-2">
-            Name
-            {{ form.name(class_="grow") }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
+            Username
+            {{ form.username(class_="grow") }} {% for error in form.username.errors %}{{ error }}{% endfor %}<br>
+        </label>
+        <label class="input input-bordered flex items-center gap-2 mb-2">
+            Password
+            {{ form.password(class_="grow") }} {% for error in form.password.errors %}{{ error }}{% endfor %}<br>
         </label>
         <label class="input input-bordered flex items-center gap-2 mb-2">
             Room

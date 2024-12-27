@@ -1,11 +1,11 @@
 import os
 import sys
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, session
 
 from hivemind.config import DevelopmentConfig, ProductionConfig, TestingConfig
 from hivemind.core.commands import register_commands
-from hivemind.core.extensions import db, socketio
+from hivemind.core.extensions import db, socketio, login_manager
 from hivemind.models import *
 from hivemind.blueprints.main import main_bp
 from hivemind.blueprints.hive import hive_bp
@@ -31,6 +31,7 @@ def create_app(config=None):
 
     # Bind extensions to app
     db.init_app(app)
+    login_manager.init_app(app)
     socketio.init_app(app)
 
     assert socketio.server is not None, "SocketIO has not been properly initialized!"
@@ -51,9 +52,11 @@ def create_app(config=None):
     import hivemind.events
     
     register_commands(app)
-
-    # @app.context_processor
-    # def utility_processor():
-    #     pass
     
     return app
+
+@login_manager.user_loader
+def load_user(user_id):
+    user = db.session.execute(db.select(User).where(User.id == user_id)).scalars().first()
+    return user
+ 

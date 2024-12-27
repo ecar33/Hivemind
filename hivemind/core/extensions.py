@@ -1,7 +1,9 @@
+from flask_login import LoginManager
 from flask_socketio import SocketIO
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase
+
 
 class Base(DeclarativeBase):
     metadata = MetaData(
@@ -16,3 +18,4 @@ class Base(DeclarativeBase):
 
 db = SQLAlchemy(model_class=Base)
 socketio = SocketIO()
+login_manager = LoginManager()

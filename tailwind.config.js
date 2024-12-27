@@ -9,7 +9,7 @@ module.exports = {
   },
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
   daisyui : {
-    themes: ['retro', 'cyberpunk', 'wireframe']
+    themes: ['retro', 'cyberpunk', 'wireframe', 'dark']
   },
 
 };
