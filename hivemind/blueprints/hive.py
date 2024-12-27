@@ -14,6 +14,7 @@ def hive(chatroom_id):
                                            .join(ChatroomParticipant, User.id == ChatroomParticipant.user_id)
                                            .where(ChatroomParticipant.chatroom_id == chatroom_id)).scalars().all()
         chat_messages = db.session.execute(db.select(ChatMessage).where(ChatMessage.chatroom_id == chatroom_id)).scalars().all()
+        
         return render_template('hive.html', chatroom_id=chatroom_id, chat_messages=chat_messages, participants=participants)
     else:
         flash("Chatroom doesn't exist!", 'error')

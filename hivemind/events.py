@@ -70,7 +70,7 @@ def on_disconnect():
 @socketio.on('send_message', namespace='/hive')
 def on_send_message(message):
     room = session.get('room')
-    message_formatted = '\n'.join(wrap(message['content'], 95))
+    message_formatted = '\n'.join(wrap(message['content'].replace("\n", ""), 50))
     emit('message', {
         'user_id': message['user_id'],
         'name': message['name'],

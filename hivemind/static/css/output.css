@@ -1179,6 +1179,10 @@ html {
   transform: translateX(0%);
 }
 
+.drawer-end {
+  grid-auto-columns: auto max-content;
+}
+
 .drawer-end > .drawer-toggle ~ .drawer-content {
   grid-column-start: 1;
 }
@@ -2279,11 +2283,6 @@ html:has(.drawer-toggle:checked) {
   width: 16rem;
 }
 
-.max-w-fit {
-  max-width: -moz-fit-content;
-  max-width: fit-content;
-}
-
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -2298,6 +2297,10 @@ html:has(.drawer-toggle:checked) {
 
 .flex-col {
   flex-direction: column;
+}
+
+.items-start {
+  align-items: flex-start;
 }
 
 .items-center {
@@ -2324,8 +2327,8 @@ html:has(.drawer-toggle:checked) {
   align-self: center;
 }
 
-.overflow-y-auto {
-  overflow-y: auto;
+.overflow-auto {
+  overflow: auto;
 }
 
 .scroll-smooth {
@@ -2378,6 +2381,11 @@ html:has(.drawer-toggle:checked) {
 
 .pl-2 {
   padding-left: 0.5rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .text-xs {
