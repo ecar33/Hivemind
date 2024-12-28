@@ -94,27 +94,28 @@
     <ul class="menu bg-base-200 text-base-content min-h-full w-64">
       <!-- Sidebar content here -->
       <li><a class="text-lg">Users: </a></li>
-          <template id="user-sidebar-template">
-            <li>
-              <div class="chat-image avatar">
-                <div class="w-10 rounded-full">
-                  <img alt="Tailwind CSS chat bubble component"
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                </div>
-              <a id="user_sidebar_name"></a>
-            </li>
-          </template>
       <div id="user_list" class="flex flex-col items-start">
         {% for user in participants %}
-        <li>
+        <li data-user_id='{{ user.id }}'>
           <div class="chat-image avatar">
             <div class="w-10 rounded-full">
               <img alt="Tailwind CSS chat bubble component"
                 src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
             </div>
-          <a> {{ user }} </a>
+          <a> {{ user.name }} </a>
         </li>
         {% endfor %}
+        <!-- Template for adding new users to the sidebar -->
+        <template id="user-sidebar-template">
+          <li data-user_id=''>
+            <div class="chat-image avatar">
+              <div class="w-10 rounded-full">
+                <img alt="Tailwind CSS chat bubble component"
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+              </div>
+            <a id="user_sidebar_name"></a>
+          </li>
+        </template>
       </div>
     </ul>
   </div>
@@ -129,6 +130,15 @@
   integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
   crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf-8">
+
+  function sortList(ul) {
+    var ul = document.getElementById(ul);
+  
+    Array.from(ul.getElementsByTagName("li"))
+      .sort((a, b) => a.textContent.localeCompare(b.textContent))
+      .forEach(li => ul.appendChild(li));
+  }
+
   $(document).ready(function () {
     var socket = io('/hive');
     var data = $('#my-data').data();
@@ -142,13 +152,25 @@
     socket.on('connect', function () {
       socket.emit('join');
     });
-    socket.on('update_userlist', function (data) {
-      $(user_list).empty();
-      for (const user of data.userlist) {
-        var user_sidebar = user_sidebar_template.content.cloneNode(true)
-        user_sidebar.querySelector("#user_sidebar_name").textContent = user
-        user_list.appendChild(user_sidebar)
-      }
+    socket.on('add_to_userlist', function (data) {
+      var new_user = data.new_user
+      var user_sidebar = user_sidebar_template.content.cloneNode(true)
+      user_sidebar.querySelector("#user_sidebar_name").textContent = new_user.name
+      user_sidebar.querySelector("li").setAttribute("data-user_id", new_user.id);
+      user_list.appendChild(user_sidebar)
+      sortList("user_list")
+    });
+    socket.on('remove_from_userlist', function (data) {
+        var user_to_delete = data.user_to_delete
+        var items = user_list.getElementsByTagName("li");
+        for (var i = 0; i < items.length; ++i) {
+          console.log(items[i])
+          var data = parseInt(items[i].getAttribute('data-user_id'))
+          if (data == user_to_delete) {
+            user_list.removeChild(items[i])
+            break
+          }
+        }
     });
     socket.on('status', function (data) {
       var div = document.createElement("div");

@@ -5,6 +5,8 @@ from hivemind.core.extensions import socketio, db
 from hivemind.models import ChatroomParticipant, User
 from textwrap import wrap
 
+connections = {}
+
 @socketio.on('join', namespace='/hive')
 def on_join():
     room = session.get('room')
@@ -15,20 +17,19 @@ def on_join():
     if not exists:
         try:
             participant = ChatroomParticipant(chatroom_id=chatroom_id, user_id=current_user.id)
+            connections[current_user.id] = connections.get(current_user.id, 0) + 1
+
             db.session.add(participant)
             db.session.commit()
 
-            user_list = db.session.execute(db.select(User.name)
-                        .join(ChatroomParticipant, User.id == ChatroomParticipant.user_id)
-                        .where(ChatroomParticipant.chatroom_id == chatroom_id)).scalars().all()
             join_room(room)
 
             emit('status', {
                 'msg': f'{session['name']} has joined!'
                 }, to=room)
     
-            emit('update_userlist', {
-                'userlist': user_list
+            emit('add_to_userlist', {
+                'new_user': current_user.to_dict()
                 }, to=room)
 
         except Exception as e:
@@ -36,36 +37,48 @@ def on_join():
             print(f'An error occured: {e}', flush=True)
     else:
         join_room(room)
+        connections[current_user.id] = connections.get(current_user.id, 0) + 1
         print(f'User {current_user.name} has opened another connection.', flush=True)
 
 @socketio.on('disconnect', namespace='/hive')
 def on_disconnect():
-    print('Disconnect event detected', flush=True)
     room = session.get('room')
     chatroom_id = room
-    leave_room(room)
-    try:
-        participant = db.session.execute(db.select(ChatroomParticipant)
-                                        .where(ChatroomParticipant.chatroom_id == chatroom_id)
-                                        .where(ChatroomParticipant.user_id == current_user.id)
-                                        ).scalars().first()
-        if participant:
-            db.session.delete(participant)
-            db.session.commit()
-            user_list = db.session.execute(db.select(User.name)
-                                           .join(ChatroomParticipant, User.id == ChatroomParticipant.user_id)
-                                           .where(ChatroomParticipant.chatroom_id == chatroom_id)).scalars().all()
-            emit('status', {
-                'msg': f'{session['name']} has left.'
-                }, to=room)
-            emit('update_userlist', {
-                'userlist': user_list 
-                }, to=room)
+
+    # Check connections for the current user
+    if connections.get(current_user.id, 0) > 1:
+        connections[current_user.id] -= 1
+        print(f"Connection decremented for {current_user.name}", flush=True)
+        return
+    else:
+        # Handle last connection
+        connections.pop(current_user.id, None)
+        leave_room(room)
+        try:
+            participant = db.session.execute(
+                db.select(ChatroomParticipant)
+                  .where(ChatroomParticipant.chatroom_id == chatroom_id)
+                  .where(ChatroomParticipant.user_id == current_user.id)
+            ).scalars().first()
             
-        else:
-            print('Participant doesnt exist!')
-    except Exception as e:
-        print(f'Something went wrong: {e}', flush=True)
+            if participant:
+                db.session.delete(participant)
+                db.session.commit()
+                
+                # Notify other users
+                emit('status', {
+                    'msg': f'{session["name"]} has left.'
+                }, to=room)
+                
+                emit('remove_from_userlist', {
+                    'user_to_delete': current_user.id
+                }, to=room)
+            else:
+                print('Participant does not exist!')
+        except Exception as e:
+            print(f'Something went wrong: {e}', flush=True)
+        finally:
+            leave_room(room)
     
 @socketio.on('send_message', namespace='/hive')
 def on_send_message(message):

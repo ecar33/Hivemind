@@ -10,7 +10,7 @@ hive_bp = Blueprint('hive', __name__, url_prefix='/hive')
 def hive(chatroom_id):
     chatroom = db.session.execute(db.select(Chatroom).where(Chatroom.id == chatroom_id)).scalars().first()
     if chatroom:
-        participants = db.session.execute(db.select(User.name)
+        participants = db.session.execute(db.select(User)
                                            .join(ChatroomParticipant, User.id == ChatroomParticipant.user_id)
                                            .where(ChatroomParticipant.chatroom_id == chatroom_id)).scalars().all()
         chat_messages = db.session.execute(db.select(ChatMessage).where(ChatMessage.chatroom_id == chatroom_id)).scalars().all()

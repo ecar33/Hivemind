@@ -1,3 +1,4 @@
+from flask import json
 from flask_login import UserMixin
 from hivemind.core.extensions import db
 from sqlalchemy import ForeignKey, PrimaryKeyConstraint, String, Text
@@ -18,6 +19,16 @@ class User(db.Model, UserMixin):
     
     def validate_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "name": self.name,
+            "profile_picture": self.profile_picture
+        }
+    
+    
 
 class ChatMessage(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
