@@ -3,7 +3,7 @@ from flask_socketio import SocketIO
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase
-
+from flask_uploads import UploadSet, IMAGES
 
 class Base(DeclarativeBase):
     metadata = MetaData(
@@ -19,3 +19,4 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 socketio = SocketIO()
 login_manager = LoginManager()
+avatars = UploadSet('avatars', IMAGES)

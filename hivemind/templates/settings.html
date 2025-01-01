@@ -1,0 +1,70 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<div class="container flex mx-auto flex-1 gap-4 p-4">
+    <div class="flex-1 md:grid grid-rows-1 grid-cols-4 h-5/6">
+        <div>
+            <ul class="menu bg-base-200 rounded-box h-full mb-4">
+                <li><a>Edit Profile</a></li>
+                <li><a>Change Avatar</a></li>
+                <li><a>Change Password</a></li>
+            </ul>
+        </div>
+        <div class="col-span-3">
+            <div class="card bg-primary text-primary-content h-full">
+                <div class="card-body gap-4">
+                    <h2 class="card-title">Edit profile</h2>
+                    <form method="POST" id='form' class="flex flex-col flex-1">
+                        {{ profile_form.hidden_tag() }}
+                        <label class="flex input items-center gap-2 mb-2">
+                            Display Name
+                            {{ profile_form.name}} {% for error in profile_form.name.errors %}{{ error }}{%
+                            endfor
+                            %}<br>
+                        </label>
+                        <label class="flex input items-center gap-2 mb-2">
+                            Username
+                            {{ profile_form.username}} {% for error in profile_form.username.errors %}{{ error }}{%
+                            endfor
+                            %}<br>
+                        </label>
+                    </form>
+                    <div class="card-actions justify-start">
+                        <input type="submit" class='btn' form="form" value="Update"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <form method="POST" enctype=multipart/form-data action="{{ url_for('settings.upload_avatar') }}">
+        {{ avatar_form.hidden_tag() }}
+        <label class="flex items-center gap-2">
+            <span class="btn">Upload Avatar</span>
+            {{ avatar_form.avatar(class_="file-input file-input-bordered [&::file-selector-button]:hidden") }}
+            {% for error in profile_form.name.errors %}{{ error }}{% endfor %}
+        </label>
+    </form>
+    <form method="POST" class="flex flex-col justify-center">
+        {{ profile_form.hidden_tag() }}
+        <label class="input input-bordered flex items-center gap-2 mb-2">
+            Display Name
+            {{ profile_form.name() }} {% for error in profile_form.name.errors %}{{ error }}{%
+            endfor
+            %}<br>
+        </label>
+        {{ profile_form.submit(class_="align-center btn self-start") }}
+    </form>
+</div> -->
+
+<!-- <form method="POST" enctype=multipart/form-data action="{{ url_for('settings.upload_avatar') }}" class="flex-1">
+    {{ avatar_form.hidden_tag() }}
+    <label class="flex items-center gap-2">
+        <span class="btn">Upload Avatar</span>
+        {{ avatar_form.avatar(class_="file-input file-input-ghost [&::file-selector-button]:hidden") }}
+        {% for error in profile_form.name.errors %}{{ error }}{% endfor %}
+    </label>
+</form> -->
+
+{% endblock content %}

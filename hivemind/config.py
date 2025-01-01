@@ -8,6 +8,10 @@ class Config:
     RATELIMIT_STORAGE_URL = "memory://"
     RATELIMIT_HEADERS_ENABLED = True
     RATELIMIT_DEFAULT = "200 per hour"
+    
+    # Flask Reuploaded
+    MAX_CONTENT_LENGTH = 1 * 1000 * 1000 # 1 MB
+    UPLOADED_AVATARS_DEST = "static/avatars"
 
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(os.getcwd(), 'data.db')

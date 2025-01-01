@@ -2,7 +2,7 @@ from flask import flash, session
 from flask_login import current_user
 from flask_socketio import emit, join_room, leave_room
 from hivemind.core.extensions import socketio, db
-from hivemind.models import ChatroomParticipant, User
+from hivemind.models import ChatroomParticipant
 from textwrap import wrap
 
 connections = {}
@@ -25,7 +25,7 @@ def on_join():
             join_room(room)
 
             emit('status', {
-                'msg': f'{session['name']} has joined!'
+                'msg': f'{current_user.name} has joined!'
                 }, to=room)
     
             emit('add_to_userlist', {
@@ -67,7 +67,7 @@ def on_disconnect():
                 
                 # Notify other users
                 emit('status', {
-                    'msg': f'{session["name"]} has left.'
+                    'msg': f'{current_user.name} has left.'
                 }, to=room)
                 
                 emit('remove_from_userlist', {

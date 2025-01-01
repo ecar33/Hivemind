@@ -5,7 +5,7 @@ from hivemind.models import ChatMessage, Chatroom, ChatroomParticipant, User
 
 hive_bp = Blueprint('hive', __name__, url_prefix='/hive')
 
-@hive_bp.route('/<int:chatroom_id>')
+@hive_bp.route('/room/<int:chatroom_id>')
 @login_required
 def hive(chatroom_id):
     chatroom = db.session.execute(db.select(Chatroom).where(Chatroom.id == chatroom_id)).scalars().first()

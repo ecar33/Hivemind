@@ -1,3 +1,5 @@
+{% set current_page = request.endpoint %}
+
 <!DOCTYPE html>
 <html {% block html_attribs %} data-theme="wireframe" {% endblock html_attribs %}>
 
@@ -17,17 +19,57 @@
 </head>
 
 <body {% block body_attribs %}{% endblock body_attribs %}>
-  {% for category, message in get_flashed_messages(with_categories=true) %}
-  <div role="alert" id="alert" class="{{ 'alert alert-error' if category=='error' else 'alert alert-success' }}">
-    <span>{{ message }}</span>
+  <div class="flex flex-col h-full">
+
+    {% block navbar %}
+    <div class="navbar container mx-auto bg-base-100">
+      <div class="flex-1">
+        <a class="btn btn-ghost text-xl" href="{{ url_for('main.index') }}">Hivemind</a>
+      </div>
+      <div class="flex-none gap-2">
+        {% if current_user.is_authenticated %}
+        <div> {{ current_user.name }} </div>
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+              <div class="w-10 rounded-full">
+                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+              </div>
+            </div>
+            <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+              <li><a href="{{ url_for('settings.settings') }}">Settings</a></li>
+              <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+            </ul>
+          </div>
+        {% else %}
+          {% if current_page != 'auth.login' %}
+            <div>
+              <a href="{{ url_for('auth.login') }}">Login</a>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% endblock navbar %}
+
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div role="alert" id="alert" class="{{ 'alert alert-error container mx-auto' if category=='error' else 'alert alert-success container mx-auto' }}">
+      <span>{{ message }}</span>
+    </div>
+    {% endfor %}
+
+    {% block content %}
+    {% endblock content%}
+
+    {% block footer -%}
+    <footer class="footer footer-center text-base-content">
+      <ul class="menu menu-horizontal gap-0.5">
+        <li class="text-xs">Copyright ©</li>
+        <li><a class="text-xs p-2" href="https://github.com/ecar33">Evan Carlile</a></li>
+      </ul>
+    </footer>
+    {% endblock footer %}
+
   </div>
-  {% endfor %}
-
-  {% block content %}
-  {% endblock content%}
-
-  {% block footer -%}
-  {% endblock footer %}
 
   {% block scripts %}
   <script src="{{ url_for('static', filename='/js/base.js') }}" type="application/javascript"></script>

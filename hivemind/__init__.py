@@ -1,14 +1,17 @@
 import os
 import sys
 from dotenv import load_dotenv
-from flask import Flask, session
+from flask import Flask
 
 from hivemind.config import DevelopmentConfig, ProductionConfig, TestingConfig
 from hivemind.core.commands import register_commands
-from hivemind.core.extensions import db, socketio, login_manager
+from hivemind.core.extensions import db, socketio, login_manager, avatars
 from hivemind.models import *
-from hivemind.blueprints.main import main_bp
+from hivemind.blueprints.settings import settings_bp
 from hivemind.blueprints.hive import hive_bp
+from hivemind.blueprints.main import main_bp
+from hivemind.blueprints.auth import auth_bp
+from flask_uploads import configure_uploads
 
 # Load environment variables
 load_dotenv()
@@ -19,6 +22,9 @@ def create_app(config=None):
     app = Flask(__name__)
 
     app.config.from_object(config)
+    
+    print(f'Max file size: {app.config['MAX_CONTENT_LENGTH']}')
+    print(f'Avatar location: {app.config['UPLOADED_AVATARS_DEST']}')
     
     if config == ProductionConfig:
 
@@ -33,7 +39,9 @@ def create_app(config=None):
     db.init_app(app)
     login_manager.init_app(app)
     socketio.init_app(app)
-
+    
+    configure_uploads(app, (avatars))
+    
     assert socketio.server is not None, "SocketIO has not been properly initialized!"
     print("SocketIO successfully bound to app.")
 
@@ -45,13 +53,21 @@ def create_app(config=None):
             db.create_all()
 
     # Import and register blueprints
-    app.register_blueprint(main_bp)
+    app.register_blueprint(settings_bp)
     app.register_blueprint(hive_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(main_bp)
+
 
     # Import events for socketio
     import hivemind.events
     
     register_commands(app)
+    
+    @app.context_processor
+    def inject():
+        chatrooms = db.session.execute(db.select(Chatroom)).scalars().all()
+        return dict(chatrooms=chatrooms)
     
     return app
 
@@ -59,4 +75,3 @@ def create_app(config=None):
 def load_user(user_id):
     user = db.session.execute(db.select(User).where(User.id == user_id)).scalars().first()
     return user
- 
