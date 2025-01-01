@@ -2015,33 +2015,11 @@ html {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.file-input-bordered {
-  --tw-border-opacity: 0.2;
-}
-
 .file-input:focus {
   outline-style: solid;
   outline-width: 2px;
   outline-offset: 2px;
   outline-color: var(--fallback-bc,oklch(var(--bc)/0.2));
-}
-
-.file-input-ghost {
-  --tw-bg-opacity: 0.05;
-}
-
-.file-input-ghost:focus {
-  --tw-bg-opacity: 1;
-  --tw-text-opacity: 1;
-  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
-  box-shadow: none;
-}
-
-.file-input-ghost::file-selector-button {
-  border-width: 1px;
-  border-color: transparent;
-  background-color: transparent;
-  color: currentColor;
 }
 
 .file-input-disabled,
@@ -2831,10 +2809,6 @@ html:has(.drawer-toggle:checked) {
   border-color: rgb(209 213 219 / var(--tw-divide-opacity, 1));
 }
 
-.self-start {
-  align-self: flex-start;
-}
-
 .self-center {
   align-self: center;
 }
@@ -2857,6 +2831,10 @@ html:has(.drawer-toggle:checked) {
 
 .rounded-full {
   border-radius: 9999px;
+}
+
+.rounded-xl {
+  border-radius: 0.75rem;
 }
 
 .border {
@@ -2895,6 +2873,11 @@ html:has(.drawer-toggle:checked) {
   padding: 1rem;
 }
 
+.px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -2902,6 +2885,10 @@ html:has(.drawer-toggle:checked) {
 
 .pl-2 {
   padding-left: 0.5rem;
+}
+
+.pt-10 {
+  padding-top: 2.5rem;
 }
 
 .text-center {
@@ -2940,6 +2927,12 @@ html:has(.drawer-toggle:checked) {
 .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.shadow-xl {
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 

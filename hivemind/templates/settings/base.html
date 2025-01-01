@@ -1,0 +1,23 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<div class="container flex mx-auto flex-1 gap-4 p-4">
+    <div class="flex-1 md:grid grid-rows-1 grid-cols-4 h-5/6">
+        <div>
+            <ul class="menu bg-base-200 rounded-box h-full mb-4">
+                <li><a href="{{ url_for('settings.edit_profile') }}">Edit Profile</a></li>
+                <li><a href="{{ url_for('settings.upload_avatar') }}">Change Avatar</a></li>
+                <li><a>Change Password</a></li>
+            </ul>
+        </div>
+        <div class="col-span-3">
+            <div class="card bg-primary text-primary-content h-full">
+                <div class="card-body gap-4">
+                    <h2 class="card-title">{% block settings_title%} {% endblock %}</h2>
+                    {% block settings_content %} {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

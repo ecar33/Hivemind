@@ -1,4 +1,4 @@
-from flask import session
+from flask import session, url_for
 from flask_login import current_user
 from flask_socketio import emit, join_room, leave_room
 from hivemind.core.extensions import socketio, db
@@ -32,7 +32,8 @@ def on_join(data):
                 }, to=room)
     
             emit('add_to_userlist', {
-                'new_user': current_user.to_dict()
+                'new_user': current_user.to_dict(),
+                'avatar': url_for('static', filename=current_user.profile_picture) 
                 }, to=room)
 
         except Exception as e:
@@ -99,6 +100,7 @@ def on_send_message(data):
     emit('message', {
         'user_id': data['user_id'],
         'name': data['name'],
+        'avatar': data['avatar'],
         'content': message_formatted,
     }, to=room)
 

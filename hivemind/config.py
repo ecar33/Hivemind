@@ -11,7 +11,7 @@ class Config:
     
     # Flask Reuploaded
     MAX_CONTENT_LENGTH = 1 * 1000 * 1000 # 1 MB
-    UPLOADED_AVATARS_DEST = "static/avatars"
+    UPLOADED_AVATARS_DEST = "hivemind/static/avatars"
 
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(os.getcwd(), 'data.db')

@@ -1,0 +1,29 @@
+{% extends 'settings/base.html' %}
+
+{% block settings_title %} Change Avatar {% endblock %}
+
+{% block settings_content %}
+
+<form method="POST" enctype=multipart/form-data action="{{ url_for('settings.upload_avatar') }}" class="w-full">
+    {{ form.hidden_tag() }}
+    <label class="flex items-center gap-2">
+        <span class="btn">Upload Avatar</span>
+        {{ form.avatar(class_="file-input [&::file-selector-button]:hidden flex-1") }} {% for error in
+        form.avatar.errors %}{{ error }}{% endfor %}
+    </label>
+    {{ form.submit(class_="align-center btn self-center mt-2") }}
+</form>
+
+<div class="flex flex-col justify-center items-center">
+    <div class="card bg-base-100 w-64 shadow-xl">
+        <figure class="px-10 pt-10">
+            <img src="{{ url_for('static', filename=current_user.profile_picture) }}" alt="Profile Picture"
+                class="rounded-xl" />
+        </figure>
+        <div class="card-body items-center text-center">
+            <h2 class="card-title">{{ current_user.name }}</h2>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

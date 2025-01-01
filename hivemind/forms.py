@@ -27,3 +27,4 @@ class ProfileForm(FlaskForm):
     
 class AvatarForm(FlaskForm):
     avatar = FileField('Profile Picture', validators=[FileRequired(), FileAllowed(avatars, 'Images only!')])
+    submit = SubmitField('Submit')

@@ -1,0 +1,26 @@
+{% extends 'settings/base.html' %}
+
+{% block settings_title %} Edit Profile {% endblock %}
+
+{% block settings_content %}
+
+<form method="POST" id='form' class="flex flex-col flex-1">
+    {{ profile_form.hidden_tag() }}
+    <label class="flex input items-center gap-2 mb-2">
+        Display Name
+        {{ profile_form.name}} {% for error in profile_form.name.errors %}{{ error }}{%
+        endfor
+        %}<br>
+    </label>
+    <label class="flex input items-center gap-2 mb-2">
+        Username
+        {{ profile_form.username}} {% for error in profile_form.username.errors %}{{ error }}{%
+        endfor
+        %}<br>
+    </label>
+</form>
+<div class="card-actions justify-start">
+    <input type="submit" class='btn' form="form" value="Update" />
+</div>
+
+{% endblock %}
