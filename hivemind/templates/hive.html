@@ -183,6 +183,8 @@
   $(document).ready(function () {
     var socket = io('/hive');
     var data = $('#my-data').data();
+    const chatroom_id = data.chatroom_id
+    console.log(chatroom_id)
     var name = data.name
     var clone_msg = ''
     var clone_sidebar_user = ''
@@ -191,7 +193,9 @@
     const user_list = document.getElementById('user_list')
     const user_sidebar_template = document.getElementById('user-sidebar-template')
     socket.on('connect', function () {
-      socket.emit('join');
+      socket.emit('join', {
+        room: chatroom_id
+      });
     });
     socket.on('add_to_userlist', function (data) {
       var new_user = data.new_user
@@ -244,7 +248,7 @@
           socket.emit('send_message', {
             user_id: '{{ current_user.id }}',
             name: name,
-            content: text
+            content: text,
           });
         }
       }
@@ -256,10 +260,16 @@
         socket.emit('send_message', {
           user_id: '{{ current_user.id }}',
           name: name,
-          content: text
+          content: text,
         });
       }
     });
+
+    window.addEventListener('beforeunload', (event) => {
+      event.preventDefault();
+      event.returnValue = '';
+    });
+
   });
 </script>
 

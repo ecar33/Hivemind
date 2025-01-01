@@ -1,4 +1,4 @@
-from flask import flash, session
+from flask import session
 from flask_login import current_user
 from flask_socketio import emit, join_room, leave_room
 from hivemind.core.extensions import socketio, db
@@ -8,8 +8,11 @@ from textwrap import wrap
 connections = {}
 
 @socketio.on('join', namespace='/hive')
-def on_join():
-    room = session.get('room')
+def on_join(data):
+    print(data, flush=True)
+    room = data['room']
+    session['room'] = room
+    
     chatroom_id = room
     exists = db.session.execute(db.select(ChatroomParticipant)
                                 .where(ChatroomParticipant.user_id == current_user.id)
@@ -42,7 +45,11 @@ def on_join():
 
 @socketio.on('disconnect', namespace='/hive')
 def on_disconnect():
-    room = session.get('room')
+    room = session.get('room', None)
+    
+    if room == None:
+        print("An error has occurred.", flush=True)
+        
     chatroom_id = room
 
     # Check connections for the current user
@@ -79,14 +86,19 @@ def on_disconnect():
             print(f'Something went wrong: {e}', flush=True)
         finally:
             leave_room(room)
-    
+            del session['room']
+                
 @socketio.on('send_message', namespace='/hive')
-def on_send_message(message):
-    room = session.get('room')
-    message_formatted = '\n'.join(wrap(message['content'].replace("\n", ""), 50))
+def on_send_message(data):
+    room = session.get('room', None)
+    
+    if room == None:
+        print("An error has occurred.", flush=True)
+        
+    message_formatted = '\n'.join(wrap(data['content'].replace("\n", ""), 50))
     emit('message', {
-        'user_id': message['user_id'],
-        'name': message['name'],
+        'user_id': data['user_id'],
+        'name': data['name'],
         'content': message_formatted,
     }, to=room)
 

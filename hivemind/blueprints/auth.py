@@ -21,7 +21,6 @@ def login():
 
                 login_user(user)
                 
-                session['room'] = chatroom_id
                 return redirect(url_for('hive.hive', chatroom_id=chatroom_id))
             else:
                 flash('User doesnt exist or password is incorrect.', 'error')

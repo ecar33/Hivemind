@@ -45,7 +45,7 @@ def register_commands(app):
         if id <= 0:
             click.echo("Chatroom ID can't be 0")
             return
-        chatroom_id = db.session.execute(db.select(Chatroom).where(Chatroom.id == 1)).scalars().first()
+        chatroom_id = db.session.execute(db.select(Chatroom).where(Chatroom.id == id)).scalars().first()
         if not chatroom_id:
             try:
                 chatroom = Chatroom(id=id)
@@ -57,7 +57,7 @@ def register_commands(app):
                 db.session.rollback()
                 click.echo(f'Something went wrong {e}')
         else:
-            click.echo("Chatroom {id} already exists!")
+            click.echo(f"Chatroom {id} already exists!")
     
     @app.cli.command()
     @click.option('--user', is_flag=True, type=int, help='User table')
