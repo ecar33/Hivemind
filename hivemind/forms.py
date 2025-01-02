@@ -8,8 +8,7 @@ class LoginForm(FlaskForm):
     """Accepts a nickname and a room."""
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    room = IntegerField('Room', validators=[DataRequired()])
-    submit = SubmitField('Enter Chatroom')
+    submit = SubmitField('Login')
     
 class SignupForm(FlaskForm):
     name = StringField('Display Name', validators=[DataRequired(), Length(1,20, message="Display name must be between 1 and 20 characters")])

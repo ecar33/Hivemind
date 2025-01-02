@@ -17,11 +17,8 @@ def login():
 
         try:
             if user.username == username and user.validate_password(password):
-                chatroom_id = request.form.get('room').strip()
-
                 login_user(user)
-                
-                return redirect(url_for('hive.hive', chatroom_id=chatroom_id))
+                return redirect(url_for('main.index'))
             else:
                 flash('User doesnt exist or password is incorrect.', 'error')
                 return redirect(url_for('auth.login'))

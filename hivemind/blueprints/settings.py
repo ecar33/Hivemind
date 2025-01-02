@@ -1,6 +1,7 @@
 import os
-from flask import Blueprint, current_app, flash, redirect, render_template, url_for
+from flask import Blueprint, current_app, flash, redirect, render_template, session, url_for
 from flask_login import current_user, login_required
+from flask_socketio import emit
 
 from hivemind.forms import AvatarForm, ProfileForm
 from hivemind.models import User
@@ -38,11 +39,13 @@ def upload_avatar():
 def edit_profile():
     profile_form = ProfileForm()
     avatar_form = AvatarForm()
+        
     if profile_form.validate_on_submit():
         new_name = profile_form.name.data
         new_username = profile_form.username.data
         
-        exists = db.session.execute(db.select(User).where(User.name == new_username)).scalars().first()
+        exists = db.session.execute(db.select(User).where(User.username == new_username)).scalars().first()
+        
         if exists and exists != current_user:
             flash("Username already taken!", "error")
             return redirect(url_for('.edit_profile'))
@@ -50,6 +53,12 @@ def edit_profile():
         current_user.name = new_name
         current_user.username = new_username
         db.session.commit()
+        
+        emit('update_profile', {
+            'user': current_user.to_dict()
+            }, namespace='/hive', 
+                broadcast=True)
+            
         flash('Profile updated!')
         return redirect(url_for('.edit_profile'))
     

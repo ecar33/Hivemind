@@ -13,10 +13,6 @@
             Password
             {{ form.password(class_="grow") }} {% for error in form.password.errors %}{{ error }}{% endfor %}<br>
         </label>
-        <label class="input input-bordered flex items-center gap-2 mb-2">
-            Room
-            {{ form.room(class_="grow") }} {% for error in form.room.errors %}{{ error }}{% endfor %}<br>
-        </label>
         {{ form.submit(class_="align-center btn w-44 self-center mt-2") }}
     </form>
 </div>

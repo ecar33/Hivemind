@@ -10,9 +10,8 @@ $(document).ready(function () {
     var socket = io('/hive');
     var data = $('#data').data();
     const chatroom_id = data.chatroom_id
-    const name = data.name
-    const avatar = data.avatar
-    console.log(avatar)
+    var name = data.name
+    var avatar = data.avatar
     var clone_msg = ''
     const snd_msg_template = document.getElementById('snd-message-template')
     const rcv_msg_template = document.getElementById('rcv-message-template')
@@ -23,11 +22,24 @@ $(document).ready(function () {
             room: chatroom_id
         });
     });
+    socket.on('update_profile', function (data) {
+        console.log('Update profile detected')
+        var user = data.user
+        name = user.name
+        var items = user_list.getElementsByTagName("li");
+        for (var i = 0; i < items.length; ++i) {
+            var data = parseInt(items[i].getAttribute('data-user_id'))
+            if (data == user.id) {
+                items[i].querySelector('.user_sidebar_name').textContent = name
+                break
+            }
+        }
+    });
     socket.on('add_to_userlist', function (data) {
         var new_user = data.new_user
         var user_sidebar = user_sidebar_template.content.cloneNode(true)
-        user_sidebar.querySelector("#user_sidebar_name").textContent = new_user.name
-        user_sidebar.querySelector("#sidebar-avatar").src = data.avatar
+        user_sidebar.querySelector(".user_sidebar_name").textContent = new_user.name
+        user_sidebar.querySelector(".sidebar-avatar").src = data.avatar
         user_sidebar.querySelector("li").setAttribute("data-user_id", new_user.id);
         user_list.appendChild(user_sidebar)
         sortList("user_list")
@@ -58,9 +70,9 @@ $(document).ready(function () {
         else {
             clone_msg = rcv_msg_template.content.cloneNode(true)
         }
-        var msg_avatar = clone_msg.getElementById('chat-avatar')
-        var msg_header = clone_msg.getElementById('chat-header')
-        var msg_content = clone_msg.getElementById('chat-content')
+        var msg_avatar = clone_msg.querySelector('.chat-avatar')
+        var msg_header = clone_msg.querySelector('.chat-header')
+        var msg_content = clone_msg.querySelector('.chat-bubble')
         msg_header.textContent = data.name
         msg_content.textContent = data.content
         msg_avatar.src = data.avatar

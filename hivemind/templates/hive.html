@@ -36,7 +36,7 @@
               </svg>
             </label>
           </div>
-          <div class="hidden flex-none lg:block">
+          <div class="flex-none lg:block">
             <ul class="menu menu-horizontal">
               <!-- Navbar menu content here -->
               {% if current_user.is_authenticated %}
@@ -67,14 +67,14 @@
             <div class="chat chat-start">
               <div class="chat-image avatar">
                 <div class="w-10 rounded-full">
-                  <img id="chat-avatar" alt=""
+                  <img class="chat-avatar" alt=""
                     src="" />
                 </div>
               </div>
-              <div id="chat-header" class="chat-header">
+              <div class="chat-header">
                 <time class="text-xs opacity-50">12:45</time>
               </div>
-              <div id="chat-content" class="chat-bubble"></div>
+              <div class="chat-bubble"></div>
             </div>
           </template>
 
@@ -83,14 +83,14 @@
             <div class="chat chat-end">
               <div class="chat-image avatar">
                 <div class="w-10 rounded-full">
-                  <img id="chat-avatar" alt=""
+                  <img class="chat-avatar" alt=""
                     src="" />
                 </div>
               </div>
-              <div id="chat-header" class="chat-header">
+              <div class="chat-header">
                 <time class="text-xs opacity-50">12:45</time>
               </div>
-              <div id="chat-content" class="chat-bubble"></div>
+              <div class="chat-bubble"></div>
             </div>
           </template>
           <!-- {% for message in chat_messages %}
@@ -130,7 +130,7 @@
               <div class="w-10 rounded-full">
                 <img src="{{ url_for('static', filename=user.profile_picture) }}" />
               </div>
-              <a> {{ user.name }} </a>
+              <a class="user_sidebar_name"> {{ user.name }} </a>
           </li>
           {% endfor %}
           <!-- Template for adding new users to the sidebar -->
@@ -138,9 +138,9 @@
             <li data-user_id='' class="w-full">
               <div class="avatar">
                 <div class="w-10 rounded-full">
-                  <img id='sidebar-avatar' src="" />
+                  <img class='sidebar-avatar' src="" />
                 </div>
-                <a id="user_sidebar_name"></a>
+                <a class="user_sidebar_name"></a>
             </li>
           </template>
         </ul>
